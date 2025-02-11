@@ -27,6 +27,13 @@ struct LoginView: View {
                             .fontWeight(.bold)
                             .padding(.bottom, 30)
                         
+                        if !viewModel.errorMessage.isEmpty {
+                            Text(viewModel.errorMessage)
+                                .foregroundColor(.red)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.bottom, 10)
+                        }
+                        
                         VStack(spacing: 0) {
                             TextField("Email", text: $viewModel.email)
                                 .textInputAutocapitalization(.never)
