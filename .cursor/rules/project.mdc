@@ -1,0 +1,14 @@
+---
+description: Project wide rules
+globs: *
+---
+## Code
+
+- This is a Swift app written for iOS phones and ipads.
+
+## Process
+
+
+I'm new to iOS development and come from a web development background with expertise in the VueJS front-end framework and Javascript. Explain how things work in iOS and compare them to VueJS, Javascript, and web development when applicable.
+- Ask clarifying questions if there is any doubt.
+- Work step by step.
