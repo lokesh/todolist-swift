@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct RegisterView: View {
-    @State private var name: String = ""
-    @State private var email: String = ""
-    @State private var password: String = ""
+    @StateObject private var viewModel = RegisterViewModel()
     
     var body: some View {
         NavigationStack {
@@ -29,22 +27,29 @@ struct RegisterView: View {
                             .fontWeight(.bold)
                             .padding(.bottom, 30)
                         
+                        if !viewModel.errorMessage.isEmpty {
+                            Text(viewModel.errorMessage)
+                                .foregroundColor(.red)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.bottom, 10)
+                        }
+                        
                         VStack(spacing: 0) {
-                            TextField("Your Name", text: $name)
+                            TextField("Your Name", text: $viewModel.name)
                                 .textInputAutocapitalization(.words)
                                 .padding()
                                 .cornerRadius(10, corners: [.topLeft, .topRight])
                             
                             Divider()
                             
-                            TextField("Email", text: $email)
+                            TextField("Email", text: $viewModel.email)
                                 .textInputAutocapitalization(.never)
                                 .autocorrectionDisabled()
                                 .padding()
                             
                             Divider()
                             
-                            SecureField("Password", text: $password)
+                            SecureField("Password", text: $viewModel.password)
                                 .padding()
                                 .cornerRadius(10, corners: [.bottomLeft, .bottomRight])
                         }
@@ -56,7 +61,7 @@ struct RegisterView: View {
                         TLButton(
                             title: "Create account",
                             action: {
-                                // Registration action will go here
+                                viewModel.register()
                             }
                         )
                     }

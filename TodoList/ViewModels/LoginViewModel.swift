@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 class LoginViewModel: ObservableObject {
     @Published var email: String = ""
@@ -14,8 +15,20 @@ class LoginViewModel: ObservableObject {
     
     func login() {
         if validate() {
-            // Login implementation will go here
-            errorMessage = ""
+            // Try to sign in with Firebase
+            Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
+                guard let self = self else { return }
+                
+                if let error = error {
+                    // Handle error - similar to catching errors in Vue/JS
+                    self.errorMessage = error.localizedDescription
+                    return
+                }
+                
+                // Success - user is logged in
+                self.errorMessage = ""
+                // Note: Navigation will be handled by a state change listener
+            }
         }
     }
 
