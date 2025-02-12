@@ -19,8 +19,14 @@ struct TodoListView: View {
 
     var body: some View {
         NavigationStack {
-            VStack {
-                Text("Welcome to the Todo List")
+            List(viewModel.todos) { todo in
+                VStack(alignment: .leading) {
+                    Text(todo.title)
+                        .font(.headline)
+                    Text("Due: \(todo.dueDateObject.formatted())")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
             }
             .navigationTitle("Todo List")
             .toolbar {
@@ -34,6 +40,9 @@ struct TodoListView: View {
             }
             .sheet(isPresented: $showingNewTodoSheet) {
                 NewTodoView(userId: userId)
+            }
+            .onAppear {
+                viewModel.fetchTodos(for: userId)
             }
         }
     }
