@@ -65,4 +65,46 @@ class TodoListViewModel: ObservableObject {
                 print("✅ Successfully loaded \(self?.todos.count ?? 0) todos")
             }
     }
+    
+    func deleteTodo(_ todo: Todo) {
+        print("🗑️ Attempting to delete todo: \(todo.id)")
+        
+        db.collection("todos").document(todo.id).delete { [weak self] error in
+            if let error = error {
+                print("❌ Error deleting todo: \(error.localizedDescription)")
+                return
+            }
+            
+            print("✅ Successfully deleted todo from Firestore")
+            
+            // Remove from local array
+            DispatchQueue.main.async {
+                self?.todos.removeAll { $0.id == todo.id }
+            }
+        }
+    }
+    
+    func toggleTodoCompletion(_ todo: Todo) {
+        let todoRef = db.collection("todos").document(todo.id)
+        
+        todoRef.updateData([
+            "isDone": !todo.isDone,
+            "dueDate": todo.dueDate,
+            "createdDate": todo.createdDate
+        ]) { [weak self] error in
+            if let error = error {
+                print("❌ Error updating todo: \(error.localizedDescription)")
+                return
+            }
+            
+            print("✅ Successfully updated todo completion status")
+            
+            // Update local array
+            DispatchQueue.main.async {
+                if let index = self?.todos.firstIndex(where: { $0.id == todo.id }) {
+                    self?.todos[index].isDone.toggle()
+                }
+            }
+        }
+    }
 }

@@ -20,13 +20,14 @@ struct TodoListView: View {
     var body: some View {
         NavigationStack {
             List(viewModel.todos) { todo in
-                VStack(alignment: .leading) {
-                    Text(todo.title)
-                        .font(.headline)
-                    Text("Due: \(todo.dueDateObject.formatted())")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                }
+                TodoListItemView(todo: todo)
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        Button(role: .destructive) {
+                            viewModel.deleteTodo(todo)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
             }
             .navigationTitle("Todo List")
             .toolbar {

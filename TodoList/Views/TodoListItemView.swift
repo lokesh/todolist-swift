@@ -8,11 +8,28 @@
 import SwiftUI
 
 struct TodoListItemView: View {
+    let todo: Todo
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(alignment: .leading) {
+            Text(todo.title)
+                .font(.headline)
+            Text("Due: \(todo.dueDateObject.formatted())")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+        }
+        .padding(.vertical, 4)
     }
 }
 
 #Preview {
-    TodoListItemView()
+    // Create a sample todo for the preview
+    TodoListItemView(todo: Todo(
+        id: "1",
+        title: "Sample Todo",
+        dueDate: Date().timeIntervalSince1970,
+        createdDate: Date().timeIntervalSince1970,
+        isDone: false,
+        userId: "user1"
+    ))
 }
