@@ -88,7 +88,7 @@ class TodoListViewModel: ObservableObject {
         let todoRef = db.collection("todos").document(todo.id)
         
         todoRef.updateData([
-            "isDone": !todo.isDone,
+            "isDone": todo.isDone,
             "dueDate": todo.dueDate,
             "createdDate": todo.createdDate
         ]) { [weak self] error in
@@ -102,7 +102,7 @@ class TodoListViewModel: ObservableObject {
             // Update local array
             DispatchQueue.main.async {
                 if let index = self?.todos.firstIndex(where: { $0.id == todo.id }) {
-                    self?.todos[index].isDone.toggle()
+                    self?.todos[index].isDone = todo.isDone
                 }
             }
         }

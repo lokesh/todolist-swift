@@ -20,7 +20,7 @@ struct TodoListView: View {
     var body: some View {
         NavigationStack {
             List(viewModel.todos) { todo in
-                TodoListItemView(todo: todo)
+                TodoListItemView(todo: todo, parentViewModel: viewModel)
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         Button(role: .destructive) {
                             viewModel.deleteTodo(todo)
