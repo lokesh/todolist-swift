@@ -10,6 +10,7 @@ import SwiftUI
 struct NewTodoView: View {
     @StateObject private var viewModel: NewTodoViewModel
     @Environment(\.dismiss) var dismiss
+    @State private var showingError = false
     
     init(userId: String) {
         _viewModel = StateObject(wrappedValue: NewTodoViewModel(userId: userId))
@@ -18,15 +19,12 @@ struct NewTodoView: View {
     var body: some View {
         NavigationStack {
             Form {
-                if !viewModel.errorMessage.isEmpty {
-                    Text(viewModel.errorMessage)
-                        .foregroundColor(.red)
-                }
-                
                 TextField("Todo title", text: $viewModel.title)
-                DatePicker("Due Date", selection: $viewModel.dueDate )
+                DatePicker("Due Date", 
+                          selection: $viewModel.dueDate,
+                          in: Date()...,
+                          displayedComponents: [.date])
                     .datePickerStyle(.graphical)
-                
             }
             .navigationTitle("New Todo")
             .navigationBarTitleDisplayMode(.inline)
@@ -38,11 +36,21 @@ struct NewTodoView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add") {
-                        viewModel.save()
-                        dismiss()
+                        viewModel.save { success in
+                            if success {
+                                dismiss()
+                            } else {
+                                showingError = true
+                            }
+                        }
                     }
                     .disabled(viewModel.title.isEmpty)
                 }
+            }
+            .alert("Error", isPresented: $showingError) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(viewModel.errorMessage)
             }
         }
     }
